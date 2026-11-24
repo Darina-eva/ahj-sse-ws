@@ -6,9 +6,11 @@
 
 [GitHub Pages](https://darina-eva.github.io/ahj-sse-ws/)
 
-## Запуск сервера
+## Сервер
 
-Фронтенд подключается к серверу по адресу `http://localhost:3000` / `ws://localhost:3000` (см. `src/js/config.js`).
+Сервер развёрнут на Render: https://ahj-sse-ws-uypt.onrender.com (регистрация `POST /new-user`, WebSocket `wss://ahj-sse-ws-uypt.onrender.com`). Адреса задаются в `src/js/config.js`.
+
+Локальный запуск:
 
 ```bash
 cd backend

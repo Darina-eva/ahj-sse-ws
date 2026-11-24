@@ -1,2 +1,2 @@
-export const API_URL = "http://localhost:3000";
-export const WS_URL = "ws://localhost:3000";
+export const API_URL = "https://ahj-sse-ws-uypt.onrender.com";
+export const WS_URL = "wss://ahj-sse-ws-uypt.onrender.com";
