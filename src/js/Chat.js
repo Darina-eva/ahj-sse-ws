@@ -28,6 +28,7 @@ export default class Chat {
       <div class="chat hidden">
         <ul class="chat-users"></ul>
         <div class="chat-main">
+          <div class="chat-status hidden"></div>
           <div class="chat-messages"></div>
           <form class="chat-form">
             <input class="chat-input" name="message" placeholder="Type your message here" autocomplete="off" />
@@ -41,6 +42,7 @@ export default class Chat {
     this.chat = this.container.querySelector(".chat");
     this.usersList = this.container.querySelector(".chat-users");
     this.messages = this.container.querySelector(".chat-messages");
+    this.status = this.container.querySelector(".chat-status");
     this.messageForm = this.container.querySelector(".chat-form");
     this.modalForm.elements.nickname.focus();
   }
@@ -84,8 +86,15 @@ export default class Chat {
     this.messageForm.elements.message.focus();
   }
 
+  setStatus(text) {
+    this.status.textContent = text;
+    this.status.classList.toggle("hidden", !text);
+  }
+
   subscribeOnEvents() {
+    this.setStatus("Подключение к серверу…");
     this.websocket = new WebSocket(WS_URL);
+    this.websocket.addEventListener("open", () => this.setStatus(""));
     this.websocket.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
       if (Array.isArray(data)) {
@@ -94,12 +103,25 @@ export default class Chat {
         this.renderMessage(data);
       }
     });
+    this.websocket.addEventListener("close", () => {
+      this.setStatus(
+        "Нет соединения с сервером чата (WebSocket). Повторное подключение…",
+      );
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = setTimeout(() => this.subscribeOnEvents(), 3000);
+    });
   }
 
   sendMessage() {
     const input = this.messageForm.elements.message;
     const message = input.value.trim();
-    if (!message || !this.websocket) {
+    if (!message) {
+      return;
+    }
+    if (!this.websocket || this.websocket.readyState !== WebSocket.OPEN) {
+      this.setStatus(
+        "Сообщение не отправлено: нет соединения с сервером чата. Повторное подключение…",
+      );
       return;
     }
     this.websocket.send(

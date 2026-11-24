@@ -25,6 +25,10 @@ body {
   padding: 0 16px;
 }
 
+.chat-users:empty {
+  display: none;
+}
+
 .chat-users {
   flex-shrink: 0;
   width: 220px;
@@ -64,6 +68,14 @@ body {
   border: 1px solid #333;
   border-radius: 12px;
   background: #fff;
+}
+
+.chat-status {
+  margin: 0 12px 12px;
+  padding: 10px 12px;
+  border: 1px solid #c33;
+  border-radius: 8px;
+  color: #c33;
 }
 
 .chat-messages {
